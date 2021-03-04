@@ -1,0 +1,41 @@
+{
+  "properties": {
+    "_class": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "datasource": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "campaign": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "daily": {
+      "type": "date",
+      "format": "MM/dd/yy"
+    },
+    "clicks": {
+      "type": "long"
+    },
+    "impressions": {
+      "type": "long"
+    }
+  }
+}

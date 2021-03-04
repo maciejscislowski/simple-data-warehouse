@@ -1,0 +1,49 @@
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "range": {
+            "daily": {
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "group_by_datasources": {
+      "terms": {
+        "field": "datasource.keyword"
+      },
+      "aggs": {
+        "group_by_campaigns": {
+          "terms": {
+            "field": "campaign.keyword"
+          },
+          "aggs": {
+            "total_clicks": {
+              "sum": {
+                "field": "clicks"
+              }
+            },
+            "total_impressions": {
+              "sum": {
+                "field": "impressions"
+              }
+            },
+            "ctr": {
+              "bucket_script": {
+                "buckets_path": {
+                  "clicks": "total_clicks",
+                  "impressions": "total_impressions"
+                },
+                "script": "params.clicks / params.impressions * 100"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

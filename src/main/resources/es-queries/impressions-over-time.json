@@ -1,0 +1,36 @@
+{
+  "query": {
+    "bool": {
+      "must": [
+        // {
+        //     "term": {
+        //         "datasource.keyword": "Google Ads"
+        //     }
+        // },
+        // {
+        //     "range": {
+        //         "daily": {
+        //             "gte": "12/01/19",
+        //             "lte": "now-14M/M"
+        //         }
+        //     }
+        // }
+      ]
+    }
+  },
+  "aggs": {
+    "per_day": {
+      "date_histogram": {
+        "field": "daily",
+        "fixed_interval": "1d"
+      },
+      "aggs": {
+        "impressions_over_time": {
+          "sum": {
+            "field": "impressions"
+          }
+        }
+      }
+    }
+  }
+}

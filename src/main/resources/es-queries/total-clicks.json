@@ -1,0 +1,35 @@
+{
+  "query": {
+    "bool": {
+      "must": [
+        // {
+        //     "term": {
+        //         "datasource.keyword": "Google Ads"
+        //     }
+        // },
+        {
+          "range": {
+            "daily": {
+              "gte": "12/01/19",
+              "lte": "now-14M/M"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "group_by_datasources": {
+      "terms": {
+        "field": "datasource.keyword"
+      },
+      "aggs": {
+        "clicks_per_datasource": {
+          "sum": {
+            "field": "clicks"
+          }
+        }
+      }
+    }
+  }
+}
