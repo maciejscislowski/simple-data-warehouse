@@ -3,8 +3,8 @@ services:
   web:
     build: .
     ports:
-      - "8080:8080"
-#    env_file: .env
+      - "8080:${PORT}"
+    env_file: .env
     depends_on:
       - es
     volumes:
@@ -13,5 +13,5 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.11.1
     environment:
       'discovery.type': single-node
-    ports:
-      - 9200:9200
+    expose:
+      - "9200:9200"
