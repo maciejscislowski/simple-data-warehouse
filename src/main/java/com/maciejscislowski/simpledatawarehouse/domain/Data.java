@@ -2,9 +2,9 @@ package com.maciejscislowski.simpledatawarehouse.domain;
 
 import lombok.Builder;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.*;
-
-import java.time.LocalDate;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Mapping;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
 @lombok.Data
 @Builder
@@ -17,7 +17,7 @@ public class Data {
     private String id;
     private String datasource;
     private String campaign;
-//    @Field(type = FieldType.Date, format = DateFormat.custom)
+    //    @Field(type = FieldType.Date, format = DateFormat.custom)
 //    private LocalDate daily;
     private String daily;
     private Long clicks;

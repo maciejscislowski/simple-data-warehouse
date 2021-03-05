@@ -1,5 +1,9 @@
 build:
   docker:
     web: Dockerfile
-run:
-  web: java $JAVA_OPTS -Dserver.port=$PORT -jar target/eadmissions-loader-0.0.1-SNAPSHOT.jar
+setup:
+  config:
+    PROFILE: heroku
+#run:
+#  web: java $JAVA_OPTS -Dserver.port=$PORT -jar target/eadmissions-loader-0.0.1-SNAPSHOT.jar
+#  web: java $JAVA_OPTS -Dserver.port=$PORT -jar /app.jar

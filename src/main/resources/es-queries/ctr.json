@@ -3,9 +3,11 @@
     "bool": {
       "must": [
         {
-          "range": {
-            "daily": {
-            }
+          "term": {
+          }
+        },
+        {
+          "term": {
           }
         }
       ]

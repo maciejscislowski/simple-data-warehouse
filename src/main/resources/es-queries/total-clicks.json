@@ -1,17 +1,16 @@
 {
+  "from": 0,
+  "size": 10,
   "query": {
     "bool": {
       "must": [
-        // {
-        //     "term": {
-        //         "datasource.keyword": "Google Ads"
-        //     }
-        // },
+        {
+          "term": {
+          }
+        },
         {
           "range": {
             "daily": {
-              "gte": "12/01/19",
-              "lte": "now-14M/M"
             }
           }
         }

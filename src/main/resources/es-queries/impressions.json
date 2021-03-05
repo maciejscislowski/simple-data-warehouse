@@ -1,0 +1,17 @@
+{
+  "aggs": {
+    "per_day": {
+      "date_histogram": {
+        "field": "daily",
+        "fixed_interval": "1d"
+      },
+      "aggs": {
+        "impressions_over_time": {
+          "sum": {
+            "field": "impressions"
+          }
+        }
+      }
+    }
+  }
+}

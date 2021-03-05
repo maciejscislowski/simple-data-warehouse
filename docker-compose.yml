@@ -2,6 +2,9 @@ version: '3.8'
 services:
   web:
     build: .
+    restart: always
+    environment:
+      WAIT_HOSTS: es:9200
     ports:
       - "8080:${PORT}"
     env_file: .env
@@ -10,8 +13,14 @@ services:
     volumes:
       - ./webapp:/opt/webapp
   es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    hostname: es
+    extra_hosts:
+      - "es:127.0.0.1"
     environment:
-      'discovery.type': single-node
-    expose:
-      - "9200:9200"
+      - discovery.type=single-node
+#      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9200:9200
+      - 9300:9300

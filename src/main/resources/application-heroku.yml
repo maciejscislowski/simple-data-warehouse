@@ -1,0 +1,3 @@
+app:
+  es:
+    host: "${SEARCHBOX_URL}"
