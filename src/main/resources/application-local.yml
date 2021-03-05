@@ -1,9 +1,0 @@
-app:
-  es:
-    host: "es:9200"
-    data-index-name: data
-  ribbon:
-    listOfServers: ${app.es.host}
-
-springdoc:
-  pathsToMatch: "/api/**"
