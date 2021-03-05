@@ -19,7 +19,7 @@ import static java.util.Objects.nonNull;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class UrlExtractor implements Extractor {
+class UrlExtractor implements Extractor {
 
     public static final String TEXT_CSV_CHARSET_UTF_8_VALUE = "text/csv;charset=utf-8";
     private final RestTemplate restTemplate;

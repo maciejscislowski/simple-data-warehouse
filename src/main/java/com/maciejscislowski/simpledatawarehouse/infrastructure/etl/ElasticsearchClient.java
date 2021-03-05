@@ -1,23 +1,43 @@
 package com.maciejscislowski.simpledatawarehouse.infrastructure.etl;
 
 import com.maciejscislowski.simpledatawarehouse.application.etl.Querier;
-import org.springframework.cloud.openfeign.FeignClient;
+import lombok.RequiredArgsConstructor;
+import org.apache.http.client.utils.URIBuilder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
-//@FeignClient(name = "es", url = "es:9200")
-//@FeignClient(name = "es", url = "https://paas:85e662daa720ca6d4138f135302f117f@oin-us-east-1.searchly.com")
-@FeignClient(name = "es", url = "#{'${app.es.host}'}")
-public interface ElasticsearchClient extends Querier {
+import java.net.URI;
+import java.net.URISyntaxException;
 
-    @GetMapping(value = "/{index}/_search", consumes = MediaType.APPLICATION_JSON_VALUE)
-    String search(@PathVariable String index, @RequestBody String query);
+@RequiredArgsConstructor
+@Component
+class ElasticsearchClient implements Querier {
+
+    @Value("${app.es.host}")
+    private String host;
+
+    @Value("${app.es.data-index-name}")
+    private String dataIndexName;
+
+    private final RestTemplate restTemplate;
 
     @Override
-    default String query(String indexName, String query) {
-        return search(indexName, query);
+    public String query(String indexName, String query) {
+        URI uri = null;
+        try {
+            uri = new URIBuilder().setScheme(host.split(":")[0])
+                    .setHost(host.split("://")[1]).setPathSegments(dataIndexName, "_search").build();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        return restTemplate.getForObject(uri, String.class);
     }
 
 }

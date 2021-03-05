@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class ElasticsearchLoader implements Loader<Data> {
+class ElasticsearchLoader implements Loader<Data> {
 
     private final DataRepository dataRepository;
 
