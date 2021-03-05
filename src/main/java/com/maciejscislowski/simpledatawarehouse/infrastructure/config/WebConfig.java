@@ -1,5 +1,6 @@
 package com.maciejscislowski.simpledatawarehouse.infrastructure.config;
 
+import feign.auth.BasicAuthRequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
@@ -19,5 +20,10 @@ public class WebConfig implements WebMvcConfigurer {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
+        @Bean
+        public BasicAuthRequestInterceptor basicAuthRequestInterceptor() {
+            return new BasicAuthRequestInterceptor("paas", "admin");
+        }
 
 }
