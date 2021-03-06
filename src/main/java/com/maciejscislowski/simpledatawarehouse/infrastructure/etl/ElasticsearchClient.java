@@ -33,7 +33,7 @@ class ElasticsearchClient implements Querier {
     public String query(String indexName, String query) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(new String(auth));
-        return restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(query, headers), String.class).getBody();
+        return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(query, headers), String.class).getBody();
     }
 
 }
