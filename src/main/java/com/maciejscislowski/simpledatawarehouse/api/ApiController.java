@@ -53,8 +53,8 @@ class ApiController {
 
     @Operation(summary = "Impressions over time (daily)", tags = {"predefined-queries"})
     @GetMapping(value = "/impressions", produces = APPLICATION_JSON_VALUE)
-    CompletableFuture<ResponseEntity<String>> impressions(@RequestParam(required = false) String from,
-                                                          @RequestParam(required = false) String size) {
+    CompletableFuture<ResponseEntity<String>> impressions(@RequestParam(required = false) Long from,
+                                                          @RequestParam(required = false) Long size) {
         return supplyAsync(() -> ok(querier.query(indexName,
                 queryBuilder.buildQuery(IMPRESSIONS_QUERY, ImmutableList.of(
                         of("$", "from", ofNullable(from)),
@@ -65,11 +65,11 @@ class ApiController {
 
     @Operation(summary = "Total Clicks for a given Datasource for a given Date range", tags = {"predefined-queries"})
     @GetMapping(value = "/total-clicks", produces = APPLICATION_JSON_VALUE)
-    CompletableFuture<ResponseEntity<String>> totalClicks(@RequestParam(required = false) String datasource,
-                                                          @RequestParam(required = false) String fromDaily,
-                                                          @RequestParam(required = false) String toDaily,
-                                                          @RequestParam(required = false) String from,
-                                                          @RequestParam(required = false) String size) {
+    CompletableFuture<ResponseEntity<String>> totalClicks(@RequestParam String datasource,
+                                                          @RequestParam String fromDaily,
+                                                          @RequestParam String toDaily,
+                                                          @RequestParam(required = false) Long from,
+                                                          @RequestParam(required = false) Long size) {
         return supplyAsync(() -> ok(querier.query(indexName,
                 queryBuilder.buildQuery(TOTAL_CLICKS_QUERY, ImmutableList.of(
                         of("$.query.bool.must[0].term", "datasource.keyword", ofNullable(datasource)),
@@ -83,10 +83,10 @@ class ApiController {
 
     @Operation(summary = "Click-Through Rate (CTR) per Datasource and Campaign", tags = {"predefined-queries"})
     @GetMapping(value = "/ctr", produces = APPLICATION_JSON_VALUE)
-    CompletableFuture<ResponseEntity<String>> ctr(@RequestParam(required = false) String datasource,
-                                                  @RequestParam(required = false) String campaign,
-                                                  @RequestParam(required = false) String from,
-                                                  @RequestParam(required = false) String size) {
+    CompletableFuture<ResponseEntity<String>> ctr(@RequestParam String datasource,
+                                                  @RequestParam String campaign,
+                                                  @RequestParam(required = false) Long from,
+                                                  @RequestParam(required = false) Long size) {
         return supplyAsync(() -> ok(querier.query(indexName,
                 queryBuilder.buildQuery(CTR_QUERY, ImmutableList.of(
                         of("$.query.bool.must[0].term[0]", "datasource.keyword", ofNullable(datasource)),

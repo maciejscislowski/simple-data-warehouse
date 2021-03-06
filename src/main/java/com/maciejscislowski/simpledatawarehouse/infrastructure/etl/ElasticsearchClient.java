@@ -4,6 +4,7 @@ import com.maciejscislowski.simpledatawarehouse.application.etl.Querier;
 import com.maciejscislowski.simpledatawarehouse.infrastructure.UrlCredentialsUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,11 +28,12 @@ class ElasticsearchClient implements Querier {
         this.restTemplate = restTemplate;
     }
 
+    @Cacheable("data")
     @Override
     public String query(String indexName, String query) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(new String(auth));
-        return restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class).getBody();
+        return restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(query, headers), String.class).getBody();
     }
 
 }

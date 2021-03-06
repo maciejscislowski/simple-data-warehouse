@@ -4,6 +4,7 @@ import com.maciejscislowski.simpledatawarehouse.application.etl.Extractor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.input.NullInputStream;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,6 +25,7 @@ class UrlExtractor implements Extractor {
     public static final String TEXT_CSV_CHARSET_UTF_8_VALUE = "text/csv;charset=utf-8";
     private final RestTemplate restTemplate;
 
+    @CacheEvict(value = "data", allEntries = true)
     @Override
     public InputStream extract(final String url) {
         HttpHeaders headers = new HttpHeaders();
