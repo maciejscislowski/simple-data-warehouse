@@ -17,8 +17,6 @@ public class Data {
     private String id;
     private String datasource;
     private String campaign;
-    //    @Field(type = FieldType.Date, format = DateFormat.custom)
-//    private LocalDate daily;
     private String daily;
     private Long clicks;
     private Long impressions;

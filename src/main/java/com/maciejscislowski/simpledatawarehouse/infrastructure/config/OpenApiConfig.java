@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
                 @Tag(name = "predefined-queries", description = "Queries which use predefined Elasticsearch queries under the hood"),
         },
         servers = {
-                @Server(url = "https://polar-scrubland-80724.herokuapp.com/", description = "DEV")
+                @Server(url = "https://simple-data-warehouse-dev.herokuapp.com", description = "DEV")
         }
 )
 @Configuration

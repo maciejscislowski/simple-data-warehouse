@@ -15,9 +15,6 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.jayway.jsonpath.JsonPath.parse;
