@@ -1,8 +1,9 @@
-package com.maciejscislowski.simpledatawarehouse.application;
+package com.maciejscislowski.simpledatawarehouse.application.query;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.jayway.jsonpath.DocumentContext;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -23,18 +24,15 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Component
 public class PredefinedQueryBuilder {
 
-    public static final String TOTAL_CLICKS_QUERY = "total-clicks.json";
-    public static final String CTR_QUERY = "ctr.json";
-    public static final String IMPRESSIONS_QUERY = "impressions.json";
-    private final ImmutableMap<String, String> queries;
+    private final ImmutableMap<String, String> templates;
 
     public PredefinedQueryBuilder(@Value("${resources:classpath:es-queries/*.json}") Resource[] resources) {
-        queries = Arrays.stream(resources).collect(toImmutableMap(Resource::getFilename, PredefinedQueryBuilder::asString));
+        templates = Arrays.stream(resources).collect(toImmutableMap(Resource::getFilename, PredefinedQueryBuilder::asString));
     }
 
-    public String buildQuery(String fileName, ImmutableList<ImmutableTriple<String, String, Optional<Object>>> params) {
-        DocumentContext ctx = parse(queries.get(fileName));
-        params.stream()
+    public String buildQuery(ImmutablePair<String, ImmutableList<ImmutableTriple<String, String, Optional<Object>>>> params) {
+        DocumentContext ctx = parse(templates.get(params.getLeft()));
+        params.getRight().stream()
                 .filter(param -> param.getRight().isPresent())
                 .forEach(param -> ctx.put(param.getLeft(), param.getMiddle(), param.getRight().get()));
         return ctx.jsonString();

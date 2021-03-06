@@ -1,9 +1,9 @@
 package com.maciejscislowski.simpledatawarehouse.api;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.maciejscislowski.simpledatawarehouse.application.EtlProcessRunner;
-import com.maciejscislowski.simpledatawarehouse.application.PredefinedQueryBuilder;
 import com.maciejscislowski.simpledatawarehouse.application.etl.Querier;
+import com.maciejscislowski.simpledatawarehouse.application.query.PredefinedQueryBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.CompletableFuture;
 
-import static com.maciejscislowski.simpledatawarehouse.application.PredefinedQueryBuilder.*;
+import static com.maciejscislowski.simpledatawarehouse.application.query.PredefinedQuery.*;
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
-import static org.apache.commons.lang3.tuple.ImmutableTriple.of;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -34,7 +34,6 @@ class ApiController {
     private final String indexName;
     private final EtlProcessRunner etlProcessRunner;
     private final Querier querier;
-
     private final PredefinedQueryBuilder queryBuilder;
 
     @Operation(summary = "Extract data from a csv file", tags = {"extract"})
@@ -55,12 +54,11 @@ class ApiController {
     @GetMapping(value = "/impressions", produces = APPLICATION_JSON_VALUE)
     CompletableFuture<ResponseEntity<String>> impressions(@RequestParam(required = false) Long from,
                                                           @RequestParam(required = false) Long size) {
-        return supplyAsync(() -> ok(querier.query(indexName,
-                queryBuilder.buildQuery(IMPRESSIONS_QUERY, ImmutableList.of(
-                        of("$", "from", ofNullable(from)),
-                        of("$", "size", ofNullable(size))
-                        )
-                ))));
+        return supplyAsync(() -> ok(querier.query(indexName, queryBuilder.buildQuery(
+                IMPRESSIONS.withParams(ImmutableMap.of(
+                        "from", ofNullable(from),
+                        "size", ofNullable(size)))
+        ))));
     }
 
     @Operation(summary = "Total Clicks for a given Datasource for a given Date range", tags = {"predefined-queries"})
@@ -70,15 +68,14 @@ class ApiController {
                                                           @RequestParam String toDaily,
                                                           @RequestParam(required = false) Long from,
                                                           @RequestParam(required = false) Long size) {
-        return supplyAsync(() -> ok(querier.query(indexName,
-                queryBuilder.buildQuery(TOTAL_CLICKS_QUERY, ImmutableList.of(
-                        of("$.query.bool.must[0].term", "datasource.keyword", ofNullable(datasource)),
-                        of("$.query.bool.must[0].range.daily", "gte", ofNullable(fromDaily)),
-                        of("$.query.bool.must[0].range.daily", "lte", ofNullable(toDaily)),
-                        of("$", "from", ofNullable(from)),
-                        of("$", "size", ofNullable(size))
-                        )
-                ))));
+        return supplyAsync(() -> ok(querier.query(indexName, queryBuilder.buildQuery(
+                TOTAL_CLICKS.withParams(ImmutableMap.of(
+                        "datasource", of(datasource),
+                        "fromDaily", of(fromDaily),
+                        "toDaily", of(toDaily),
+                        "from", ofNullable(from),
+                        "size", ofNullable(size)))
+        ))));
     }
 
     @Operation(summary = "Click-Through Rate (CTR) per Datasource and Campaign", tags = {"predefined-queries"})
@@ -87,14 +84,13 @@ class ApiController {
                                                   @RequestParam String campaign,
                                                   @RequestParam(required = false) Long from,
                                                   @RequestParam(required = false) Long size) {
-        return supplyAsync(() -> ok(querier.query(indexName,
-                queryBuilder.buildQuery(CTR_QUERY, ImmutableList.of(
-                        of("$.query.bool.must[0].term[0]", "datasource.keyword", ofNullable(datasource)),
-                        of("$.query.bool.must[0].term[1]", "campaign.keyword", ofNullable(campaign)),
-                        of("$", "from", ofNullable(from)),
-                        of("$", "size", ofNullable(size))
-                        )
-                ))));
+        return supplyAsync(() -> ok(querier.query(indexName, queryBuilder.buildQuery(
+                CTR.withParams(ImmutableMap.of(
+                        "datasource", of(datasource),
+                        "campaign", of(campaign),
+                        "from", ofNullable(from),
+                        "size", ofNullable(size)))
+        ))));
     }
 
 }
