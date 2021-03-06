@@ -45,8 +45,8 @@ class ApiController {
     }
 
     @Operation(summary = "Search with the Elasticsearch query", tags = {"query"})
-    @GetMapping(value = "/query", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    CompletableFuture<ResponseEntity<String>> query(String query) {
+    @PostMapping(value = "/query", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    CompletableFuture<ResponseEntity<String>> query(@RequestBody String query) {
         return supplyAsync(() -> ok(querier.query(indexName, query)));
     }
 

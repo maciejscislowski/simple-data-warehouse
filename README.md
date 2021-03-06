@@ -39,4 +39,6 @@
 
 * CTR: ```GET``` https://simple-data-warehouse-dev.herokuapp.com/api/v1/ctr?datasource=Google%20Ads&campaign=Remarketing&size=1
 
-* Generic query (with Elasticsearch query as the body): ```GET``` https://simple-data-warehouse-dev.herokuapp.com/api/v1/query
+* Generic query (with Elasticsearch query as the body): ```POST``` https://simple-data-warehouse-dev.herokuapp.com/api/v1/query
+
+* Generic query with cURL ```curl -H "Content-Type: application/json" -d '{"query":{"bool":{"must":[{"term":{"datasource.keyword":"Google Ads"}},{"range":{"daily":{"gte":"now-20M/M","lte":"now"}}}]}},"aggs":{"group_by_datasources":{"terms":{"field":"datasource.keyword"},"aggs":{"clicks_per_datasource":{"sum":{"field":"clicks"}}}}},"size":1}' https://simple-data-warehouse-dev.herokuapp.com/api/v1/query```
