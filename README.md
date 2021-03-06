@@ -1,4 +1,4 @@
-### C1: System Context (C4 diagram)
+### 1. C1: System Context (C4 diagram)
 
  ```
   
@@ -19,11 +19,11 @@
       
   ```
 
-### Rebuild with docker locally
+### 2. Rebuild with docker locally
 
 ```docker-compose build && docker-compose up```
 
-### Important links
+### 3. Important links
 
 * The demo application : https://simple-data-warehouse-dev.herokuapp.com
 
@@ -31,7 +31,7 @@
 
 * The repository: https://github.com/maciejscislowski/simple-data-warehouse
 
-#### Example possible queries
+#### 3.1. Example possible queries
 
 * Total clicks: ```GET``` https://simple-data-warehouse-dev.herokuapp.com/api/v1/total-clicks?datasource=Google%20Ads&fromDaily=now-20M/M&toDaily=now&size=1
 
