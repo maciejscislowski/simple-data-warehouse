@@ -1,4 +1,4 @@
-package com.maciejscislowski.simpledatawarehouse.application.etl;
+package com.maciejscislowski.simpledatawarehouse.application.query;
 
 public interface Querier {
 

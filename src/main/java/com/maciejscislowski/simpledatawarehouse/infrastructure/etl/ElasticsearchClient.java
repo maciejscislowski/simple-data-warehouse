@@ -1,6 +1,6 @@
 package com.maciejscislowski.simpledatawarehouse.infrastructure.etl;
 
-import com.maciejscislowski.simpledatawarehouse.application.etl.Querier;
+import com.maciejscislowski.simpledatawarehouse.application.query.Querier;
 import com.maciejscislowski.simpledatawarehouse.infrastructure.UrlCredentialsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;

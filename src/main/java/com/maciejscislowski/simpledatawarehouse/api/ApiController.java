@@ -2,7 +2,7 @@ package com.maciejscislowski.simpledatawarehouse.api;
 
 import com.google.common.collect.ImmutableMap;
 import com.maciejscislowski.simpledatawarehouse.application.EtlProcessRunner;
-import com.maciejscislowski.simpledatawarehouse.application.etl.Querier;
+import com.maciejscislowski.simpledatawarehouse.application.query.Querier;
 import com.maciejscislowski.simpledatawarehouse.application.query.PredefinedQueryBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
