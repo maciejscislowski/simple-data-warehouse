@@ -8,54 +8,37 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 @EnableElasticsearchRepositories
 @Configuration
 class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
 
-    @Value("${app.es.host}")
-    private String host;
-
-    @Value("${app.es.data-index-name}")
-    private String dataIndexName;
+    @Autowired
+    private ElasticsearchProperties properties;
 
     @Bean
     public RestClientBuilder restClientBuilder() {
-        URI uri = null;
-        try {
-            uri = new URI(host);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e.getMessage());
+        RestClientBuilder builder = RestClient.builder(new HttpHost(properties.getHost(),
+                properties.getPort(), properties.getScheme()));
+        if (properties.isSecured()) {
+            final CredentialsProvider credentialsProvider =
+                    new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(AuthScope.ANY,
+                    new UsernamePasswordCredentials(properties.getUser(), properties.getPassword()));
+            builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder
+                    .setDefaultCredentialsProvider(credentialsProvider));
         }
-
-        final String[] userInfo = uri.getUserInfo().split(":");
-        final CredentialsProvider credentialsProvider =
-                new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY,
-                new UsernamePasswordCredentials(userInfo[0], userInfo[1]));
-
-        return RestClient.builder(
-                new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme()))
-                .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder
-                        .setDefaultCredentialsProvider(credentialsProvider));
+        return builder;
     }
 
     @Override
     public RestHighLevelClient elasticsearchClient() {
         return new RestHighLevelClient(restClientBuilder());
-    }
-
-    @Bean
-    public String dataIndexName() {
-        return dataIndexName;
     }
 
 }

@@ -10,7 +10,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 @Builder
 @Mapping(mappingPath = "es/data-mappings.json")
 @Setting(settingPath = "es/data-settings.json")
-@Document(indexName = "#{@dataIndexName}")
+@Document(indexName = "#{@elasticsearchProperties.getDataIndexName()}")
 public class Data {
 
     @Id

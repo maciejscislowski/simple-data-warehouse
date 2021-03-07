@@ -2,8 +2,9 @@ package com.maciejscislowski.simpledatawarehouse.api;
 
 import com.google.common.collect.ImmutableMap;
 import com.maciejscislowski.simpledatawarehouse.application.EtlProcessRunner;
-import com.maciejscislowski.simpledatawarehouse.application.query.Querier;
 import com.maciejscislowski.simpledatawarehouse.application.query.PredefinedQueryBuilder;
+import com.maciejscislowski.simpledatawarehouse.application.query.Querier;
+import com.maciejscislowski.simpledatawarehouse.infrastructure.config.ElasticsearchProperties;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +31,11 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 class ApiController {
 
-    @Qualifier("dataIndexName")
-    private final String indexName;
-    private final EtlProcessRunner etlProcessRunner;
+    @Qualifier("elasticsearchCachedQuerier")
     private final Querier querier;
+    private final ElasticsearchProperties properties;
     private final PredefinedQueryBuilder queryBuilder;
+    private final EtlProcessRunner etlProcessRunner;
 
     @Operation(summary = "Extract data from a csv file", tags = {"extract"})
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -47,14 +48,15 @@ class ApiController {
     @Operation(summary = "Search with the Elasticsearch query", tags = {"query"})
     @PostMapping(value = "/query", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     CompletableFuture<ResponseEntity<String>> query(@RequestBody String query) {
-        return supplyAsync(() -> ok(querier.query(indexName, query)));
+        return supplyAsync(() -> ok(
+                querier.query(properties.getDataIndexName(), query)));
     }
 
     @Operation(summary = "Impressions over time (daily)", tags = {"predefined-queries"})
     @GetMapping(value = "/impressions", produces = APPLICATION_JSON_VALUE)
     CompletableFuture<ResponseEntity<String>> impressions(@RequestParam(required = false) Long from,
                                                           @RequestParam(required = false) Long size) {
-        return supplyAsync(() -> ok(querier.query(indexName, queryBuilder.buildQuery(
+        return supplyAsync(() -> ok(querier.query(properties.getDataIndexName(), queryBuilder.buildQuery(
                 IMPRESSIONS.withParams(ImmutableMap.of(
                         "from", ofNullable(from),
                         "size", ofNullable(size)))
@@ -68,7 +70,7 @@ class ApiController {
                                                           @RequestParam String toDaily,
                                                           @RequestParam(required = false) Long from,
                                                           @RequestParam(required = false) Long size) {
-        return supplyAsync(() -> ok(querier.query(indexName, queryBuilder.buildQuery(
+        return supplyAsync(() -> ok(querier.query(properties.getDataIndexName(), queryBuilder.buildQuery(
                 TOTAL_CLICKS.withParams(ImmutableMap.of(
                         "datasource", of(datasource),
                         "fromDaily", of(fromDaily),
@@ -84,7 +86,7 @@ class ApiController {
                                                   @RequestParam String campaign,
                                                   @RequestParam(required = false) Long from,
                                                   @RequestParam(required = false) Long size) {
-        return supplyAsync(() -> ok(querier.query(indexName, queryBuilder.buildQuery(
+        return supplyAsync(() -> ok(querier.query(properties.getDataIndexName(), queryBuilder.buildQuery(
                 CTR.withParams(ImmutableMap.of(
                         "datasource", of(datasource),
                         "campaign", of(campaign),

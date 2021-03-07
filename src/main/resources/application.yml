@@ -1,7 +1,7 @@
 app:
   es:
-    host: "es:9200"
-    data-index-name: data
+    host: "http://127.0.0.1:9200"
+    data-index-name: "data"
   ribbon:
     listOfServers: ${app.es.host}
 

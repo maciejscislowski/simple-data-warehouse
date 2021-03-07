@@ -28,6 +28,8 @@ class UrlExtractor implements Extractor {
     @CacheEvict(value = "data", allEntries = true)
     @Override
     public InputStream extract(final String url) {
+        log.info("Cache was evicted");
+
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.ACCEPT, TEXT_CSV_CHARSET_UTF_8_VALUE);
         HttpEntity<String> entity = new HttpEntity<>(headers);
