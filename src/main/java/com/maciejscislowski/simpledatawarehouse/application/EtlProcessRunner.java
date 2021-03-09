@@ -22,10 +22,12 @@ public class EtlProcessRunner {
 
     @Async
     public void runProcess(String source) {
+        extractor.start();
         of(source)
                 .map(extractor::extract)
                 .flatMap(transformer::transform)
                 .forEach(loader::load);
+        extractor.stop();
     }
 
 }

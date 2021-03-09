@@ -1,18 +1,4 @@
 {
-  "query": {
-    "bool": {
-      "must": [
-        {
-          "term": {
-          }
-        },
-        {
-          "term": {
-          }
-        }
-      ]
-    }
-  },
   "aggs": {
     "group_by_datasources": {
       "terms": {

@@ -1,10 +1,13 @@
 package com.maciejscislowski.simpledatawarehouse.infrastructure.etl;
 
 import com.maciejscislowski.simpledatawarehouse.application.etl.Extractor;
+import com.maciejscislowski.simpledatawarehouse.infrastructure.metadata.Metadata;
+import com.maciejscislowski.simpledatawarehouse.infrastructure.metadata.MetadataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.input.NullInputStream;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 
 import static java.util.Objects.nonNull;
 
@@ -24,6 +28,7 @@ class UrlExtractor implements Extractor {
 
     public static final String TEXT_CSV_CHARSET_UTF_8_VALUE = "text/csv;charset=utf-8";
     private final RestTemplate restTemplate;
+    private final MetadataRepository repository;
 
     @CacheEvict(value = "data", allEntries = true)
     @Override
@@ -38,6 +43,32 @@ class UrlExtractor implements Extractor {
         log.info("Extracted file {} length", response.getHeaders().getContentLength());
 
         return nonNull(response.getBody()) ? new ByteArrayInputStream(response.getBody()) : new NullInputStream(0);
+    }
+
+    @Override
+    public void start() {
+        log.info("Process has been started");
+        repository.save(
+                repository.findAll(PageRequest.of(0, 1))
+                        .get().findFirst().orElse(Metadata.builder()
+                        .etlProcessRunning(true)
+                        .etlProcessLastStarted(now())
+                        .build()).updateEtlProcessLastStarted(now()));
+        log.info("Metadata has been updated");
+    }
+
+    @Override
+    public void stop() {
+        log.info("Process has been stopped");
+        repository.save(
+                repository.findAll(PageRequest.of(0, 1))
+                        .get().findFirst().orElseThrow(() -> new RuntimeException("Metadata not found"))
+                        .updateEtlProcessRunning(false));
+        log.info("Metadata has been updated");
+    }
+
+    static LocalDateTime now() {
+        return LocalDateTime.now();
     }
 
 }

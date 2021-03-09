@@ -1,0 +1,11 @@
+{
+  "max_result_window": "10000000",
+  "analysis": {
+    "analyzer": {
+      "search_analyzer": {
+        "filter": "lowercase",
+        "tokenizer": "whitespace"
+      }
+    }
+  }
+}

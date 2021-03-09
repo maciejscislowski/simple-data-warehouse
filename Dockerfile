@@ -4,7 +4,7 @@ COPY pom.xml .
 # Caching maven deps
 RUN mvn dependency:go-offline
 COPY src/ /build/src/
-RUN mvn package -DskipTests
+RUN mvn package
 
 FROM openjdk:11-jdk
 EXPOSE $PORT

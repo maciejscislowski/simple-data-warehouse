@@ -1,0 +1,20 @@
+{
+  "properties": {
+    "_class": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "is_etl_process_running": {
+      "type": "boolean"
+    },
+    "etl_process_last_started": {
+      "type": "date",
+      "format": "MM/dd/yy"
+    }
+  }
+}

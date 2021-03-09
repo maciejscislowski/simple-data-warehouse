@@ -2,8 +2,13 @@ app:
   es:
     host: "http://127.0.0.1:9200"
     data-index-name: "data"
+    metadata-index-name: "metadata"
   ribbon:
     listOfServers: ${app.es.host}
 
 springdoc:
   pathsToMatch: "/api/**"
+
+logging:
+  level:
+    org.springframework.cache: TRACE

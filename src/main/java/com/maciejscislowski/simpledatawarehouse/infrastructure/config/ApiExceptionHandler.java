@@ -1,6 +1,7 @@
-package com.maciejscislowski.simpledatawarehouse.api;
+package com.maciejscislowski.simpledatawarehouse.infrastructure.config;
 
 import com.google.common.collect.ImmutableMap;
+import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -12,20 +13,27 @@ import javax.validation.ConstraintViolationException;
 import java.util.Map;
 
 @RestControllerAdvice
-public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public Map<String, String> handle(ConstraintViolationException ex) {
+    public Map<String, String> constraintViolation(ConstraintViolationException ex) {
         return error(ex.getConstraintViolations()
                 .stream()
                 .map(ConstraintViolation::getMessage)
                 .toArray(String[]::new));
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({FeignException.class, NumberFormatException.class})
+    public Map<String, String> apiInput(Exception ex) {
+        return error("Error occurred " + ex.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
     @ExceptionHandler
-    public void handle(UnsupportedOperationException ex) {
+    public Map<String, String> unsupportedOperation(UnsupportedOperationException ex) {
+        return error("Operation is unsupported");
     }
 
     private Map<String, String> error(String... message) {

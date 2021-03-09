@@ -1,3 +1,3 @@
 app:
   es:
-    host: "es:9200"
+    host: ${ES_HOST}

@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Configuration;
                 @Tag(name = "extract", description = "Extract data from a csv file"),
                 @Tag(name = "query", description = "General search allowing querying the data in a generic and efficient way using Elasticsearch queries"),
                 @Tag(name = "predefined-queries", description = "Queries which use predefined Elasticsearch queries under the hood"),
+                @Tag(name = "metadata", description = "Administrative information"),
         },
         servers = {
                 @Server(url = "https://simple-data-warehouse-dev.herokuapp.com", description = "DEV")

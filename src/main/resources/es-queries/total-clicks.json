@@ -1,20 +1,4 @@
 {
-  "query": {
-    "bool": {
-      "must": [
-        {
-          "term": {
-          }
-        },
-        {
-          "range": {
-            "daily": {
-            }
-          }
-        }
-      ]
-    }
-  },
   "aggs": {
     "group_by_datasources": {
       "terms": {

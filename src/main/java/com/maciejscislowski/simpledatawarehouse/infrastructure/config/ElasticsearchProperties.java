@@ -7,14 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import static java.lang.String.format;
-import static java.util.Objects.isNull;
 
 @Slf4j
 @ConfigurationProperties(prefix = "app.es")
@@ -26,6 +24,9 @@ public class ElasticsearchProperties {
     @Setter
     @Getter
     private String dataIndexName;
+    @Setter
+    @Getter
+    private String metadataIndexName;
     @Setter
     private String host;
     @Getter

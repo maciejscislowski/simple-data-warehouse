@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Slf4j
-@Component("elasticsearchCachedQuerier")
+@RequiredArgsConstructor
+@Component("cachedQuerier")
 class ElasticsearchCachedQuerier implements Querier {
 
     private final ElasticsearchQuerier elasticsearchQuerier;
@@ -16,8 +16,12 @@ class ElasticsearchCachedQuerier implements Querier {
     @Cacheable("data")
     @Override
     public String query(String indexName, String query) {
-        log.info("Querying from {} index", indexName);
-        return elasticsearchQuerier.query(indexName, query);
+        try {
+            return elasticsearchQuerier.query(indexName, query);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
 }

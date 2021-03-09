@@ -6,4 +6,8 @@ public interface Extractor {
 
     InputStream extract(String source);
 
+    void start();
+
+    void stop();
+
 }
