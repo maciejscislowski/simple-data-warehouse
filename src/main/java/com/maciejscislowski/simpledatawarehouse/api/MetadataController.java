@@ -31,7 +31,7 @@ public class MetadataController {
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     CompletableFuture<ResponseEntity<String>> metadata() {
         return supplyAsync(() -> ok(
-                querier.query(properties.getMetadataIndexName(), "{}")));
+                querier.query(properties.getMetadataIndexName(), null)));
     }
 
 }

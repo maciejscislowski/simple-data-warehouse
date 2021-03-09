@@ -30,7 +30,6 @@ class UrlExtractor implements Extractor {
     private final RestTemplate restTemplate;
     private final MetadataRepository repository;
 
-    @CacheEvict(value = "data", allEntries = true)
     @Override
     public InputStream extract(final String url) {
         log.info("Cache was evicted");
@@ -39,24 +38,26 @@ class UrlExtractor implements Extractor {
         headers.set(HttpHeaders.ACCEPT, TEXT_CSV_CHARSET_UTF_8_VALUE);
         HttpEntity<String> entity = new HttpEntity<>(headers);
         ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, byte[].class);
-
         log.info("Extracted file {} length", response.getHeaders().getContentLength());
 
         return nonNull(response.getBody()) ? new ByteArrayInputStream(response.getBody()) : new NullInputStream(0);
     }
 
+    @CacheEvict(value = "data", allEntries = true)
     @Override
     public void start() {
         log.info("Process has been started");
         repository.save(
                 repository.findAll(PageRequest.of(0, 1))
                         .get().findFirst().orElse(Metadata.builder()
-                        .etlProcessRunning(true)
                         .etlProcessLastStarted(now())
-                        .build()).updateEtlProcessLastStarted(now()));
+                        .build())
+                        .updateEtlProcessRunning(true)
+                        .updateEtlProcessLastStarted(now()));
         log.info("Metadata has been updated");
     }
 
+    @CacheEvict(value = "data", allEntries = true)
     @Override
     public void stop() {
         log.info("Process has been stopped");
