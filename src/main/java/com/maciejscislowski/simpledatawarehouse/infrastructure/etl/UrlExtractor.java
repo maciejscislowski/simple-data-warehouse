@@ -28,7 +28,8 @@ class UrlExtractor implements Extractor {
 
     public static final String TEXT_CSV_CHARSET_UTF_8_VALUE = "text/csv;charset=utf-8";
     private final RestTemplate restTemplate;
-    private final MetadataRepository repository;
+    private final MetadataRepository metadataRepository;
+    private final DataRepository dataRepository;
 
     @Override
     public InputStream extract(final String url) {
@@ -40,6 +41,9 @@ class UrlExtractor implements Extractor {
         ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, byte[].class);
         log.info("Extracted file {} length", response.getHeaders().getContentLength());
 
+        dataRepository.deleteAll();
+        log.info("Data index was cleared");
+
         return nonNull(response.getBody()) ? new ByteArrayInputStream(response.getBody()) : new NullInputStream(0);
     }
 
@@ -47,8 +51,8 @@ class UrlExtractor implements Extractor {
     @Override
     public void start() {
         log.info("Process has been started");
-        repository.save(
-                repository.findAll(PageRequest.of(0, 1))
+        metadataRepository.save(
+                metadataRepository.findAll(PageRequest.of(0, 1))
                         .get().findFirst().orElse(Metadata.builder()
                         .etlProcessLastStarted(now())
                         .build())
@@ -61,8 +65,8 @@ class UrlExtractor implements Extractor {
     @Override
     public void stop() {
         log.info("Process has been stopped");
-        repository.save(
-                repository.findAll(PageRequest.of(0, 1))
+        metadataRepository.save(
+                metadataRepository.findAll(PageRequest.of(0, 1))
                         .get().findFirst().orElseThrow(() -> new RuntimeException("Metadata not found"))
                         .updateEtlProcessRunning(false));
         log.info("Metadata has been updated");
