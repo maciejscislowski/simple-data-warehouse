@@ -3,6 +3,7 @@ package com.maciejscislowski.simpledatawarehouse.infrastructure.query;
 import com.maciejscislowski.simpledatawarehouse.application.query.Querier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,8 @@ import org.springframework.stereotype.Component;
 @Component("cachedQuerier")
 class ElasticsearchCachedQuerier implements Querier {
 
-    private final ElasticsearchQuerier elasticsearchQuerier;
+    @Qualifier("querier")
+    private final Querier elasticsearchQuerier;
 
     @Cacheable("data")
     @Override

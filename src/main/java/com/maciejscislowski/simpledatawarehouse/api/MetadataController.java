@@ -23,7 +23,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 public class MetadataController {
 
-    @Qualifier("cachedQuerier")
+    @Qualifier("querier")
     private final Querier querier;
     private final ElasticsearchProperties properties;
 

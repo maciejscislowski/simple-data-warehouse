@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.maciejscislowski.simpledatawarehouse.application.query.Query.*;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
+import static org.apache.commons.lang3.StringUtils.chomp;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -53,9 +55,9 @@ class ApiController {
 
     @Operation(summary = "Search with the Elasticsearch query", tags = {"query"})
     @PostMapping(value = "/query", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    CompletableFuture<ResponseEntity<String>> query(@RequestBody String query) {
+    CompletableFuture<ResponseEntity<String>> query(@RequestBody(required = false) String query) {
         return supplyAsync(() -> ok(
-                querier.query(properties.getDataIndexName(), query)));
+                querier.query(properties.getDataIndexName(), chomp(query))));
     }
 
     @Operation(summary = "Impressions over time (daily)", tags = {"predefined-queries"},
