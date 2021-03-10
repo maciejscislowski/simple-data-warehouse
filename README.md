@@ -2,6 +2,10 @@
 
 ![C4 level 2 container diagram](docs/c4_level2_container_diagram.png)
 
+### 2. Component diagram (C4 level 3).
+
+![C4 level 3 component diagram](docs/c4_level3_component_diagram.png)
+
 ### 2. Run locally with docker.
 
 - Run with `docker-compose build && docker-compose up`.
