@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 
 @Profile("heroku")
 @Configuration
-public class FeignConfig {
+class FeignConfig {
 
     @Bean
     public BasicAuthRequestInterceptor basicAuthRequestInterceptor(ElasticsearchProperties properties) {

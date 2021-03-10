@@ -16,7 +16,7 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Component
-public class TemplateResolver {
+class TemplateResolver {
 
     private final ImmutableMap<String, String> templates;
 

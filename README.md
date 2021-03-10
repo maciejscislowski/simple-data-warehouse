@@ -1,23 +1,6 @@
-### 1. System Context diagram.
+### 1. Container diagram (C4 level 2).
 
- ```
-  
-                 +-----------------+
-                 |                 |
-                 |  Source (.csv)  |
-                 |                 |
-                 +--------+--------+
-                          ^
-                          |
-                          |
-             +------------+-------------+         +-----------------+
-             |                          |         |                 |
-  [REST API] +  Simple Data Warehouse   + ------> +  Elasticsearch  |
-    query    |      (ETL system)        + <------ +   (data store)  |
-      &      |                          |         |                 |
-   extract   +--------------------------+         +-----------------+
-      
-  ```
+![C4 level 2 container diagram](docs/c4_level2_container_diagram.png)
 
 ### 2. Run locally with docker.
 

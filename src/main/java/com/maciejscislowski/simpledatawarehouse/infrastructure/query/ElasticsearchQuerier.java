@@ -11,7 +11,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Qualifier("querier")
 @FeignClient(name = "es", url = "#{@elasticsearchProperties.getFullHost()}")
-public interface ElasticsearchQuerier extends Querier {
+interface ElasticsearchQuerier extends Querier {
 
     @PostMapping(value = "/{index}/_search", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

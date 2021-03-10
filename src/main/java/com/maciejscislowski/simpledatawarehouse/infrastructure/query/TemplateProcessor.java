@@ -14,7 +14,7 @@ import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
 @Component
-public class TemplateProcessor {
+class TemplateProcessor {
 
     public String process(String template, List<ImmutableTriple<String, String, Object>> params) {
         final DocumentContext ctx = parse(template);
