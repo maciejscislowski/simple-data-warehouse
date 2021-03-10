@@ -1,24 +1,26 @@
-### 1. Container diagram (C4 level 2).
+### 1. The container diagram (C4 level 2).
 
 ![C4 level 2 container diagram](docs/c4_level2_container_diagram.png)
 
-### 2. Component diagram (C4 level 3).
+### 2. The component diagram (C4 level 3).
 
 ![C4 level 3 component diagram](docs/c4_level3_component_diagram.png)
 
-### 2. Run locally with docker.
+### 3. Running the application.
+
+#### 3.1 With Docker.
 
 - Run with `docker-compose build && docker-compose up`.
 
 - Maven dependencies are cached. 
 
-### 3. Run locally without docker.
+#### 3.2. Without docker.
 
 - Be sure an Elasticsearch instance is up and running on `localhost:9200` (ie use a docker image or a shared instance).
 
 - Build the application with Maven and run without any profile (it means `default`).
 
-### 4. Run on Heroku.
+#### 3.3 On Heroku.
 
 - Heroku doesn't support `docker-compose`.
 
@@ -28,22 +30,71 @@
 
 - Deploy from your repository and use `Procfile`.
 
-#### 4.1. Important links.
+### 4. Project related links.
 
 * **The application demo**: https://simple-data-warehouse-dev.herokuapp.com
 
-* Swagger (REST API documentation): https://simple-data-warehouse-dev.herokuapp.com/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
+* **Swagger documentation**: https://simple-data-warehouse-dev.herokuapp.com/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
 
 * **The repository**: https://github.com/maciejscislowski/simple-data-warehouse
 
-#### 4.1. Example possible queries.
+### 5. Using the API.
 
-* Total clicks: `GET` https://simple-data-warehouse-dev.herokuapp.com/api/v1/total-clicks?datasource=Google%20Ads&fromDaily=now-20M/M&toDaily=now&size=1
+#### 5.1 Predefined queries.
+ 
+- You can use Elasticsearch syntax in dates parameters; 
+ 
+- Pagination parameters (optionals, numbers): size, from;
 
-* Impressions: `GET` https://simple-data-warehouse-dev.herokuapp.com/api/v1/impressions?size=2
+##### Total clicks endpoint
 
-* CTR: `GET` https://simple-data-warehouse-dev.herokuapp.com/api/v1/ctr?datasource=Google%20Ads&campaign=Remarketing&size=1
+- `GET` https://simple-data-warehouse-dev.herokuapp.com/api/v1/total-clicks
 
-* A generic query (with Elasticsearch query as the body): `POST` `https://simple-data-warehouse-dev.herokuapp.com/api/v1/query`
+- Optional parameters: datasource, fromDaily, toDaily;
 
-* A generic query with cURL `curl -H "Content-Type: application/json" -d '{"query":{"bool":{"must":[{"term":{"datasource.keyword":"Google Ads"}},{"range":{"daily":{"gte":"now-20M/M","lte":"now"}}}]}},"aggs":{"group_by_datasources":{"terms":{"field":"datasource.keyword"},"aggs":{"clicks_per_datasource":{"sum":{"field":"clicks"}}}}},"size":1}' https://simple-data-warehouse-dev.herokuapp.com/api/v1/query`
+- Example: 
+```
+curl -G \
+    --data-urlencode "datasource=Google Ads" \
+    --data-urlencode "fromDaily=now-20M/M" \
+    --data-urlencode "toDaily=now" \
+    --data-urlencode "size=3" \
+    https://simple-data-warehouse-dev.herokuapp.com/api/v1/total-clicks
+```
+
+##### Impressions endpoint
+
+- `GET` https://simple-data-warehouse-dev.herokuapp.com/api/v1/impressions
+
+- Example:
+```
+curl -G \
+    --data-urlencode "size=5" \
+    https://simple-data-warehouse-dev.herokuapp.com/api/v1/impressions
+```
+
+##### CTR endpoint
+
+- `GET` https://simple-data-warehouse-dev.herokuapp.com/api/v1/ctr
+
+- Optional parameters: datasource, campaign;
+
+- Example:
+```
+curl -G \
+    --data-urlencode "datasource=Google Ads" \
+    --data-urlencode "campaign=Remarketing" \
+    --data-urlencode "size=1" \
+    https://simple-data-warehouse-dev.herokuapp.com/api/v1/ctr
+```
+
+#### 5.2 The generic endpoint
+
+- `POST` https://simple-data-warehouse-dev.herokuapp.com/api/v1/ctr
+
+- An optional parameter: JSON query based on Elasticsearch syntax;
+
+- Example:
+```
+curl -H "Content-Type: application/json" -d '{"query":{"bool":{"must":[{"term":{"datasource.keyword":"Google Ads"}},{"range":{"daily":{"gte":"now-20M/M","lte":"now"}}}]}},"aggs":{"group_by_datasources":{"terms":{"field":"datasource.keyword"},"aggs":{"clicks_per_datasource":{"sum":{"field":"clicks"}}}}},"size":1}' https://simple-data-warehouse-dev.herokuapp.com/api/v1/query
+```
