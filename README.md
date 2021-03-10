@@ -90,7 +90,7 @@ curl -G \
 
 #### 5.2 The generic endpoint
 
-- `POST` https://simple-data-warehouse-dev.herokuapp.com/api/v1/ctr
+- `POST` https://simple-data-warehouse-dev.herokuapp.com/api/v1/query
 
 - An optional parameter: JSON query based on Elasticsearch syntax;
 
