@@ -88,7 +88,7 @@ curl -G \
     https://simple-data-warehouse-dev.herokuapp.com/api/v1/ctr
 ```
 
-#### 5.2 The generic endpoint
+#### 5.2. The generic endpoint.
 
 - `POST` https://simple-data-warehouse-dev.herokuapp.com/api/v1/query
 
@@ -97,4 +97,23 @@ curl -G \
 - Example:
 ```
 curl -H "Content-Type: application/json" -d '{"query":{"bool":{"must":[{"term":{"datasource.keyword":"Google Ads"}},{"range":{"daily":{"gte":"now-20M/M","lte":"now"}}}]}},"aggs":{"group_by_datasources":{"terms":{"field":"datasource.keyword"},"aggs":{"clicks_per_datasource":{"sum":{"field":"clicks"}}}}},"size":1}' https://simple-data-warehouse-dev.herokuapp.com/api/v1/query
+```
+
+#### 5.3. The ETL data process endpoint.
+
+##### Starting the ETL data process
+
+- `POST` https://simple-data-warehouse-dev.herokuapp.com/api/v1/extract?url=<CSV_DATA_FILE_URL>
+
+- Example:
+```
+curl https://simple-data-warehouse-dev.herokuapp.com/api/v1/extract?url=<CSV_DATA_FILE_URL>
+```
+
+##### Administrative application state endpoint (ie status of the ETL process)
+
+- `GET` https://simple-data-warehouse-dev.herokuapp.com/metadata
+
+```
+curl -G https://simple-data-warehouse-dev.herokuapp.com/metadata
 ```
